@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="HIDINE Achraf">
+
+<title>SOMACA APP</title>
+
+<!-- Custom fonts for this template -->
+<link rel="stylesheet" type="text/css"
+	href="../static/vendor/fontawesome-free/css/all.min.css"
+	th:href="@{/vendor/fontawesome-free/css/all.min.css}" />
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link
+	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+	rel="stylesheet">
+
+<!-- Custom styles for this template -->
+<link rel="stylesheet" type="text/css"
+	href="../static/css/sb-admin-2.min.css"
+	th:href="@{/css/sb-admin-2.min.css}" />
+
+
+<!-- Custom styles for this page -->
+<link rel="stylesheet" type="text/css"
+	href="../vendor/datatables/dataTables.bootstrap4.min.css"
+	th:href="@{/vendor/datatables/dataTables.bootstrap4.min.css}" />
+
+<style type="text/css">
+table.table td a {
+	font-weight: bold;
+	color: #566787;
+	display: inline-block;
+	text-decoration: none;
+	outline: none !important;
+}
+
+table.table td a:hover {
+	color: #2196F3;
+}
+
+table.table td a.edit {
+	color: #FFC107;
+}
+
+table.table td a.delete {
+	color: #F44336;
+}
+
+div.dataTables_paginate ul.pagination {
+	justify-content: center !important;
+}
+</style>
+
+</head>
+
+<body id="page-top">
+
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+
+		<!-- Sidebar -->
+		<ul
+			class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled"
+			id="accordionSidebar">
+
+			<!-- Sidebar - Brand -->
+			<a
+				class="sidebar-brand d-flex align-items-center justify-content-center"
+				href="index.html">
+				<div class="sidebar-brand-icon rotate-n-15">
+					<i class="fas fa-laugh-wink"></i>
+				</div>
+				<div class="sidebar-brand-text mx-3">
+					SOMACA <sup>MA</sup>
+				</div>
+			</a>
+
+			<!-- Divider -->
+			<hr class="sidebar-divider my-0">
+
+			<!-- Nav Item - Dashboard -->
+			<li class="nav-item active"><a class="nav-link" href="index">
+					<i class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
+			</a></li>
+
+			<!-- Divider -->
+
+
+
+
+
+
+
+			<!-- Divider -->
+			<hr class="sidebar-divider">
+
+			<!-- Nav Item - Charts -->
+			<li class="nav-item"><a class="nav-link" href="#UploadModal"  data-toggle="modal"> <i
+					class="fa fa-upload" aria-hidden="true"></i> <span>Importer</span>
+			</a></li>
+
+			<!-- Nav Item - Tables -->
+			<li class="nav-item "><a class="nav-link"
+				th:href="@{http://localhost:8095/api/MyTable/download/MyTable.xlsx}"><i
+					class="fa fa-download" aria-hidden="true"></i> <span>Exporter</span></a>
+			</li>
+
+			<!-- Divider -->
+
+
+			<hr class="sidebar-divider d-none d-md-block">
+			<li class="nav-item "><a class="nav-link"
+				th:href="@{/Deconnecter}"><i
+					class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
+					aria-hidden="true"></i> <span>Logout</span></a></li>
+			<div class="text-center d-none d-md-inline">
+				<button class="rounded-circle border-0" id="sidebarToggle"></button>
+			</div>
+
+			<!-- Sidebar Toggler (Sidebar) -->
+
+
+		</ul>
+		<!-- End of Sidebar -->
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+
+			<!-- Main Content -->
+			<div id="content">
+
+				<!-- Topbar -->
+
+				<!-- End of Topbar -->
+
+				<!-- Begin Page Content -->
+				<div class="container-fluid" style="margin-top: 20px;">
+
+
+					<!-- DataTales Example -->
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary"
+								style="text-align: center;">
+								Mes donnees <a href="#addEmployeeModal" style="float: right;"
+									class="btn btn-success" title="Ajouter un nouveau ligne"
+									data-toggle="modal"><i class="material-icons">&#xE147;</i></a>
+							</h6>
+
+
+						</div>
+						<div class="alert alert-success alert-block text-center"
+							th:if="${message}">
+							<strong th:text="${ message }"></strong>
+
+						</div>
+
+						<div class="card-body" style="font-size: 12px;">
+							<div class="table-responsive">
+								<table class="table table-hover" id="dataTable" width="100%"
+									cellspacing="0">
+									<thead>
+										<tr>
+											<th>Departement</th>
+											<th>Equipement</th>
+											<th>Sous_equipement</th>
+											<th>Designation</th>
+											<th>Reference</th>
+											<th>Etat_PDR</th>
+											<th>Type_PDR</th>
+											<th>Code_mabic</th>
+											<th>Mode_gestionnaire</th>
+											<th>Actions</th>
+									</thead>
+									<tbody>
+										<tr th:each="o:${MyData}">
+											<td th:text="${o.departement}"></td>
+											<td th:text="${o.equipement}"></td>
+											<td th:text="${o.sous_equipement}"></td>
+											<td th:text="${o.designation}"></td>
+											<td th:text="${o.reference}"></td>
+											<td th:text="${o.etat_PDR} "></td>
+											<td th:text="${o.Type_PDR}"></td>
+											<td th:text="${o.code_mabic}"></td>
+											<td th:text="${o.mode_gestionnaire}"></td>
+											<td><a th:href="@{'#editEmployeeModal'+${o.id}}"
+												class="edit" data-toggle="modal"><i
+													class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+											</a> <a th:href="@{'#deleteEmployeeModal'+${o.id}}"
+												class="delete" data-toggle="modal"><i
+													class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+											</a> <!-- delete -->
+												<div th:id="'deleteEmployeeModal'+${o.id}"
+													class="modal fade">
+													<div class="modal-dialog">
+														<div class="modal-content">
+
+															<div class="modal-header">
+																<h4 class="modal-title">Supprimer un enregistrement</h4>
+																<button type="button" class="close" data-dismiss="modal"
+																	aria-hidden="true">&times;</button>
+															</div>
+															<div class="modal-body">
+																<p>vous etes sur de supprimer cet enregistrement ?</p>
+																<p class="text-warning">
+																	<small>cette action est definitive.</small>
+																</p>
+															</div>
+															<div class="modal-footer">
+																<input type="button" class="btn btn-default"
+																	data-dismiss="modal" value="Cancel"> <a
+																	th:href="@{'/delete'(id=${o.id})}">
+																	<button type="submit" class="btn btn-danger">
+																		Delete</button>
+																</a>
+
+															</div>
+
+														</div>
+													</div>
+												</div> <!-- Edit Modal HTML -->
+												<div th:id="'editEmployeeModal'+${o.id}" class="modal fade">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<form th:action="@{/Update}">
+																<div class="modal-header">
+																	<h4 class="modal-title">Edit Employee</h4>
+																	<button type="button" class="close"
+																		data-dismiss="modal" aria-hidden="true">&times;</button>
+																</div>
+																<input name="id" th:value="${o.id}" type="hidden">
+																<div class="modal-body">
+																	<div class="form-group">
+																		<label>Departement</label> <input
+																			th:value="${o.departement}" type="text"
+																			name="departement" class="form-control" required>
+																	</div>
+																	<div class="form-group">
+																		<label>Equipement</label> <input
+																			th:value="${o.equipement}" type="text"
+																			name="equipement" class="form-control" required>
+																	</div>
+																	<div class="form-group">
+																		<label>Sous equipement</label> <input
+																			th:value="${o.sous_equipement}" type="text"
+																			class="form-control" name="sous_equipement" required>
+																	</div>
+																	<div class="form-group">
+																		<label>Designation</label> <input
+																			th:value="${o.designation}" type="text"
+																			name="designation" class="form-control" required>
+																	</div>
+																	<div class="form-group">
+																		<label>Reference</label> <input
+																			th:value="${o.reference}" type="text"
+																			name="reference" class="form-control" required>
+																	</div>
+																	<div class="form-group">
+																		<label>Etat PDR</label> <input
+																			th:value="${o.etat_PDR}" type="text" name="etat_PDR"
+																			class="form-control" required>
+
+																	</div>
+																																	<div class="form-group">
+																	<label>Code mabic</label> <input
+																		th:value="${o.code_mabic}" type="text"
+																		name="code_mabic" class="form-control" required>
+																</div>
+																<div class="form-group">
+																	<label>Mode gestionnaire</label> <input
+																		th:value="${o.mode_gestionnaire}" type="text"
+																		name="mode_gestionnaire" class="form-control" required>
+																</div>
+																<div class="form-group">
+																	<label>Type PDR</label> <input th:value="${o.Type_PDR}"
+																		type="text" name="Type_PDR" class="form-control"
+																		required>
+																</div>
+
+																</div>
+
+
+																<div class="modal-footer">
+																	<input type="button" class="btn btn-default"
+																		data-dismiss="modal" value="Cancel"> <input
+																		type="submit" class="btn btn-info" value="Save">
+																</div>
+															</form>
+														</div>
+													</div>
+												</div></td>
+
+
+
+										</tr>
+
+									</tbody>
+								</table>
+
+
+								<div class="row">
+									<div class="col-xs-4"></div>
+									<div class="col-xs-8">
+										<div class="dataTables_paginate paging_simple_numbers"
+											id="dataTable_paginate"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<!-- /.container-fluid -->
+
+			</div>
+			<!-- End of Main Content -->
+
+			<!-- Footer -->
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Copyright &copy; AH_OE 2019</span>
+					</div>
+				</div>
+			</footer>
+			<!-- End of Footer -->
+
+		</div>
+		<!-- End of Content Wrapper -->
+
+	</div>
+	<!-- End of Page Wrapper -->
+
+	<!-- Scroll to Top Button-->
+	<a class="scroll-to-top rounded" href="#page-top"> <i
+		class="fas fa-angle-up"></i>
+	</a>
+
+
+
+	<div class="modal fade" id="UploadModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Upload File</h5>
+					<button class="close" type="button" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form method="POST" th:action="@{/}" enctype="multipart/form-data"
+						id="fileUploadForm">
+						<div class="form-group">
+							<label class="control-label" for="uploadfile">Upload
+								File:</label> <input type="file" class="form-control" id="uploadfile"
+								placeholder="Upload File" name="uploadfile"></input>
+						</div>
+
+						<div class="form-check-inline">
+  <label class="form-check-label">
+    <input type="radio" class="form-check-input" value="1" name="what"> Ecraser
+  </label>
+</div>
+<div class="form-check-inline">
+  <label class="form-check-label">
+    <input type="radio" class="form-check-input" value="0" name="what">Dupliquer
+  </label>
+</div>
+					
+
+
+				</div>
+										<div class="modal-footer">
+							<button class="btn btn-secondary" type="button"
+								data-dismiss="modal">Cancel</button>
+							<input type="submit" value="UP" class="btn btn-primary">
+						</div>
+					</form>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="addEmployeeModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form th:action="@{/Add}" method="post">
+					<div class="modal-header">
+						<h4 class="modal-title">Ajouter un nouveau enregistrement</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label>Departement</label> <input type="text" name="departement"
+								class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Equipement</label> <input type="text" name="equipement"
+								class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Sous equipement</label> <input type="text"
+								class="form-control" name="sous_equipement" required>
+						</div>
+						<div class="form-group">
+							<label>Designation</label> <input type="text" name="designation"
+								class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Reference</label> <input type="text" name="reference"
+								class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Etat PDR</label> <input type="text" name="etat_PDR"
+								class="form-control" required>
+
+						</div>
+						<div class="form-group">
+							<label>Code mabic</label> <input type="text" name="code_mabic"
+								class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Mode gestionnaire</label> <input type="text"
+								name="mode_gestionnaire" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label>Type PDR</label> <input type="text" name="Type_PDR"
+								class="form-control" required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="button" class="btn btn-default" data-dismiss="modal"
+							value="Cancel"> <input type="submit"
+							class="btn btn-success" value="Add">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Delete Modal HTML -->
+
+	<!-- Bootstrap core JavaScript-->
+	<script th:src=" @{/vendor/jquery/jquery.min.js}  "></script>
+	<script th:src=" @{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+	<!-- Core plugin JavaScript-->
+	<script th:src=" @{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+	<!-- Custom scripts for all pages-->
+	<script th:src=" @{/js/sb-admin-2.min.js}  "></script>
+
+
+	<!-- Page level plugins -->
+	<script th:src=" @{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+	<script th:src=" @{/vendor/datatables/jquery.dataTables.min.js}"></script>
+
+
+	<script th:src=" @{/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+
+
+	<!-- Page level custom scripts -->
+	<script th:src=" @{/js/demo/datatables-demo.js}"></script>
+	<script>
+		$('#dataTable').dataTable({
+			"dom" : 'ftipr',
+			"showNEntries" : false,
+			"lengthChange" : false,
+			"bInfo" : false
+		});
+	</script>
+
+</body>
+
+</html>
